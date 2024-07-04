@@ -1,13 +1,19 @@
-import requests
-from lib.base_class import BaseClass
+from lib.base_api import BaseApi
 from lib.assertions import Assertions
 
 
-class TestCreateBooking(BaseClass):
-    def test_create_new_booking(self, new_booking_data):
-        response = new_booking_data()
-        print(response.text)
-        assert response.status_code == 200
+class TestCreateBooking(BaseApi):
+    def test_create_new_booking(self, create_booking_data, create_new_booking):
+        data = create_booking_data
+        response = create_new_booking(data)
 
-        main_keys = ["bookingid", "booking"]
-        Assertions.assert_json_has_keys(response, main_keys)
+        Assertions.assert_code_status(response, 200)
+
+        main_obj_keys = ["bookingid", "booking"]
+        Assertions.assert_json_has_keys(response, main_obj_keys)
+
+        booking_obj_keys = ["firstname", "lastname", "totalprice", "depositpaid", "bookingdates", "additionalneeds"]
+        Assertions.assert_json_has_keys(response, booking_obj_keys, "booking")
+
+        bookingdates_obj_keys = ["checkin", "checkout"]
+        Assertions.assert_json_has_keys(response, bookingdates_obj_keys, "booking.bookingdates")

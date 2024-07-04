@@ -1,39 +1,33 @@
 import json
+
+import requests
 from requests import Response
 
 
 class BaseApi:
-    @staticmethod
-    def post(url: str, data: dict = None, headers: dict = None, cookies: dict = None):
-        with allure.step(f"POST request to URL '{url}"):
-            return MyRequests._send(url, data, headers, cookies, 'POST')
+    BASE_URL = "https://restful-booker.herokuapp.com"
 
-    @staticmethod
-    def get(url: str, data: dict = None, headers: dict = None, cookies: dict = None):
-        with allure.step(f"GET request to URL '{url}"):
-            return MyRequests._send(url, data, headers, cookies, 'GET')
+    def post(self, url: str, data: dict = None, headers: dict = None, cookies: dict = None):
+        return BaseApi._send(url, data, headers, cookies, 'POST')
 
-    @staticmethod
-    def put(url: str, data: dict = None, headers: dict = None, cookies: dict = None):
-        with allure.step(f"PUT request to URL '{url}"):
-            return MyRequests._send(url, data, headers, cookies, 'PUT')
+    def get(self, url: str, data: dict = None, headers: dict = None, cookies: dict = None):
+        return BaseApi._send(url, data, headers, cookies, 'GET')
 
-    @staticmethod
-    def delete(url: str, data: dict = None, headers: dict = None, cookies: dict = None):
-        with allure.step(f"DELETE request to URL '{url}"):
-            return MyRequests._send(url, data, headers, cookies, 'DELETE')
+    def put(self, url: str, data: dict = None, headers: dict = None, cookies: dict = None):
+        return BaseApi._send(url, data, headers, cookies, 'PUT')
+
+    def delete(self, url: str, data: dict = None, headers: dict = None, cookies: dict = None):
+        return BaseApi._send(url, data, headers, cookies, 'DELETE')
 
     @staticmethod
     def _send(url: str, data: dict, headers: dict, cookies: dict, method: str):
 
-        url = f"{ENV_OBJECT.get_base_url()}{url}"
+        url = f"{BaseApi.BASE_URL}{url}"
 
         if headers is None:
             headers = {}
         if cookies is None:
             cookies = {}
-
-        Logger.add_request(url, data, headers, cookies, method)
 
         if method == 'GET':
             response = requests.get(url, params=data, headers=headers, cookies=cookies)
@@ -45,8 +39,6 @@ class BaseApi:
             response = requests.delete(url, data=data, headers=headers, cookies=cookies)
         else:
             raise Exception(f"Bad HTTP method '{method} was received")
-
-        Logger.add_response(response)
 
         return response
 

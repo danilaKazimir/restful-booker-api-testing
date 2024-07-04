@@ -4,6 +4,16 @@ from requests import Response
 
 class Assertions:
     @staticmethod
+    def assert_code_status(response: Response, expected_status_code):
+        assert response.status_code == expected_status_code, \
+            f"Unexpected status code! Expected: {expected_status_code}, Actual: {response.status_code}"
+
+    @staticmethod
+    def assert_content(response: Response, expected_response):
+        assert response.content.decode("utf-8") == expected_response, \
+            f"Unexpected response content - '{response.content}', instead of - '{expected_response}'"
+
+    @staticmethod
     def assert_json_has_keys(response: Response, names: list, path=None):
         try:
             response_as_dict = response.json()

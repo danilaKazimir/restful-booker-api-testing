@@ -3,9 +3,11 @@ from lib.assertions import Assertions
 
 
 class TestCreateBooking(BaseApi):
-    def test_create_new_booking(self, create_booking_data, create_new_booking):
+    BOOKING_ROUTE = "/booking"
+
+    def test_create_new_booking(self, create_booking_data):
         data = create_booking_data
-        response = create_new_booking(data)
+        response = self.create_new_booking(self.BOOKING_ROUTE, data)
 
         Assertions.assert_code_status(response, 200)
 

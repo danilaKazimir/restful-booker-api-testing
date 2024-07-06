@@ -1,8 +1,6 @@
 import pytest
 from faker import Faker
-from lib.base_api import BaseApi
 
-BOOKING_ROUTE = "/booking"
 fake = Faker()
 
 
@@ -27,12 +25,3 @@ def create_booking_data():
     }
 
     return data
-
-
-@pytest.fixture
-def create_new_booking():
-    def _create_booking(data):
-        response = BaseApi.post(BOOKING_ROUTE, data=data)
-        return response
-
-    return _create_booking

@@ -34,3 +34,13 @@ class Assertions:
         else:
             for name in names:
                 assert name in response_as_dict, f"Key '{name}' not found in the response JSON: {response_as_dict}"
+
+    @staticmethod
+    def assert_json_value_by_name(response: Response, name, expected_value, error_message):
+        try:
+            response_as_dict = response.json()
+        except json.JSONDecodeError:
+            assert False, f"Response is not in JSON format. Response format is {response.text}"
+
+        assert name in response_as_dict, f"Response JSON doesn't have key {name}"
+        assert response_as_dict[name] == expected_value, error_message

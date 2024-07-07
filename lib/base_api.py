@@ -18,6 +18,9 @@ class BaseApi:
     def delete(self, url: str, data: dict = None, headers: dict = None, cookies: dict = None):
         return BaseApi._send(url, data, headers, cookies, 'DELETE')
 
+    def patch(self, url: str, data: dict = None, headers: dict = None, cookies: dict = None):
+        return BaseApi._send(url, data, headers, cookies, 'PATCH')
+
     @staticmethod
     def _send(url: str, data: dict, headers: dict, cookies: dict, method: str):
 
@@ -36,6 +39,8 @@ class BaseApi:
             response = requests.put(url, json=data, headers=headers, cookies=cookies)
         elif method == 'DELETE':
             response = requests.delete(url, json=data, headers=headers, cookies=cookies)
+        elif method == 'PATCH':
+            response = requests.patch(url, json=data, headers=headers, cookies=cookies)
         else:
             raise Exception(f"Bad HTTP method '{method} was received")
 

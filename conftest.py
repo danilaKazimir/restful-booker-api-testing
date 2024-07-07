@@ -32,6 +32,27 @@ def create_booking_data():
 
 
 @pytest.fixture
+def generate_field_value():
+    def _generate_field_value(field):
+        if field == "firstname":
+            return fake.first_name()
+        elif field == "lastname":
+            return fake.last_name()
+        elif field == "totalprice":
+            return fake.pyint(500, 1000)
+        elif field == "depositpaid":
+            return fake.pybool()
+        elif field == "checkin" or field == "checkout":
+            return fake.date_between(start_date='-30d', end_date='today').strftime('%Y-%m-%d')
+        elif field == "additionalneeds":
+            return fake.sentence(nb_words=10)
+        else:
+            raise Exception(f"Invalid field value for generate field value method - {field}!")
+
+    return _generate_field_value
+
+
+@pytest.fixture
 def create_new_booking():
     def _create_new_booking(data):
         response = base.post(f"{Constant.BOOKING_ROUTE}", data=data)

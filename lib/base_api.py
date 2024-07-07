@@ -42,26 +42,6 @@ class BaseApi:
 
         return response
 
-    def create_new_booking(self, url, data):
-        response = self.post(url, data=data)
-        return response
-
-    def get_booking_id(self, response: Response):
-        try:
-            response_as_dict = response.json()
-        except json.JSONDecodeError:
-            assert False, f"Response is not in JSON format. Response format is {response.text}"
-
-        return response_as_dict['bookingid']
-
-    def get_auth_token(self, response: Response):
-        try:
-            response_as_dict = response.json()
-        except json.JSONDecodeError:
-            assert False, f"Response is not in JSON format. Response format is {response.text}"
-
-        return response_as_dict['token']
-
     def get_json_value(self, response: Response, name):
         try:
             response_as_dict = response.json()

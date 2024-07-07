@@ -1,7 +1,16 @@
 import pytest
 from faker import Faker
+from lib.base_api import BaseApi
+from lib.assertions import Assertions
 
 fake = Faker()
+base = BaseApi()
+BOOKING_ROUTE = "/booking"
+CREATE_TOKEN_ROUTE = "/auth"
+VALID_ADMIN_DATA = {
+        "username": "admin",
+        "password": "password123"
+    }
 
 
 @pytest.fixture
@@ -25,3 +34,50 @@ def create_booking_data():
     }
 
     return data
+
+
+@pytest.fixture
+def create_new_booking():
+    def _create_new_booking(data):
+        response = base.post(f"{BOOKING_ROUTE}", data=data)
+
+        Assertions.assert_code_status(response, 200)
+
+        main_obj_keys = ["bookingid", "booking"]
+        Assertions.assert_json_has_keys(response, main_obj_keys)
+
+        booking_obj_keys = ["firstname", "lastname", "totalprice", "depositpaid", "bookingdates", "additionalneeds"]
+        Assertions.assert_json_has_keys(response, booking_obj_keys, "booking")
+
+        bookingdates_obj_keys = ["checkin", "checkout"]
+        Assertions.assert_json_has_keys(response, bookingdates_obj_keys, "booking.bookingdates")
+
+        Assertions.assert_json_obj_values(response, data, "booking")
+
+        return base.get_json_value(response, "bookingid")
+
+    return _create_new_booking
+
+
+@pytest.fixture
+def get_auth_token():
+    def _get_auth_token(data=None):
+        if data is None:
+            data = VALID_ADMIN_DATA
+            response = base.post(CREATE_TOKEN_ROUTE, data)
+
+            Assertions.assert_code_status(response, 200)
+            Assertions.assert_json_has_keys(response, ["token"])
+
+            return base.get_json_value(response, "token")
+        else:
+            response = base.post(CREATE_TOKEN_ROUTE, data)
+            Assertions.assert_code_status(response, 200)
+            Assertions.assert_json_value_by_name(
+                response,
+                "reason",
+                "Bad credentials",
+                "Invalid reason message!"
+            )
+
+    return _get_auth_token

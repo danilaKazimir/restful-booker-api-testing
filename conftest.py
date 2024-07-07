@@ -2,15 +2,10 @@ import pytest
 from faker import Faker
 from lib.base_api import BaseApi
 from lib.assertions import Assertions
+from constant import Constant
 
 fake = Faker()
 base = BaseApi()
-BOOKING_ROUTE = "/booking"
-CREATE_TOKEN_ROUTE = "/auth"
-VALID_ADMIN_DATA = {
-        "username": "admin",
-        "password": "password123"
-    }
 
 
 @pytest.fixture
@@ -39,7 +34,7 @@ def create_booking_data():
 @pytest.fixture
 def create_new_booking():
     def _create_new_booking(data):
-        response = base.post(f"{BOOKING_ROUTE}", data=data)
+        response = base.post(f"{Constant.BOOKING_ROUTE}", data=data)
 
         Assertions.assert_code_status(response, 200)
 
@@ -63,15 +58,15 @@ def create_new_booking():
 def get_auth_token():
     def _get_auth_token(data=None):
         if data is None:
-            data = VALID_ADMIN_DATA
-            response = base.post(CREATE_TOKEN_ROUTE, data)
+            data = Constant.VALID_ADMIN_DATA
+            response = base.post(Constant.TOKEN_ROUTE, data)
 
             Assertions.assert_code_status(response, 200)
             Assertions.assert_json_has_keys(response, ["token"])
 
             return base.get_json_value(response, "token")
         else:
-            response = base.post(CREATE_TOKEN_ROUTE, data)
+            response = base.post(Constant.TOKEN_ROUTE, data)
             Assertions.assert_code_status(response, 200)
             Assertions.assert_json_value_by_name(
                 response,

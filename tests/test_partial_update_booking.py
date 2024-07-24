@@ -20,6 +20,7 @@ class TestPartialUpdateBooking(BaseApi):
         {"Authorization": "Invalid auth value"}
     ]
 
+    @pytest.mark.delete_data_after_test
     @pytest.mark.parametrize("field_for_update", FIELDS)
     def test_partial_update_booking_using_cookie_value(self, create_booking_data, create_new_booking, get_auth_token,
                                                        generate_field_value, field_for_update):
@@ -42,6 +43,7 @@ class TestPartialUpdateBooking(BaseApi):
         Assertions.assert_code_status(response, 200)
         Assertions.assert_json_obj_values(response, booking_data_after_update)
 
+    @pytest.mark.delete_data_after_test
     @pytest.mark.parametrize("field_for_update", FIELDS)
     def test_partial_update_booking_using_auth_header(self, create_booking_data, create_new_booking,
                                                       generate_field_value, field_for_update):

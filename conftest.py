@@ -53,7 +53,7 @@ def generate_field_value():
 
 
 @pytest.fixture
-def create_new_booking():
+def create_new_booking(request, get_auth_token):
     def _create_new_booking(data):
         response = base.post(f"{Constant.BOOKING_ROUTE}", data=data)
 
@@ -70,7 +70,20 @@ def create_new_booking():
 
         Assertions.assert_json_obj_values(response, data, "booking")
 
-        return base.get_json_value(response, "bookingid")
+        booking_id = base.get_json_value(response, "bookingid")
+
+        def finalize():
+            if "delete_data_after_test" in request.node.keywords:
+                delete_response = base.delete(
+                    f"{Constant.BOOKING_ROUTE}{booking_id}",
+                    headers={"Cookie": f"token={get_auth_token()}"}
+                )
+                Assertions.assert_code_status(delete_response, 201)
+                Assertions.assert_content(delete_response, "Created")
+
+        request.addfinalizer(finalize)
+
+        return booking_id
 
     return _create_new_booking
 

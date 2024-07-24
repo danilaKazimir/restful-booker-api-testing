@@ -5,6 +5,7 @@ from constant import Constant
 
 
 class TestGetBookingIds(BaseApi):
+    @pytest.mark.delete_data_after_test
     def test_get_all_ids(self, create_booking_data, create_new_booking):
         booking_id = create_new_booking(create_booking_data)
 
@@ -13,6 +14,7 @@ class TestGetBookingIds(BaseApi):
         Assertions.assert_code_status(response, 200)
         Assertions.assert_expected_object_exist_in_json(response, {"bookingid": booking_id})
 
+    @pytest.mark.delete_data_after_test
     def test_get_all_ids_filtered_by_name(self, create_booking_data, create_new_booking):
         booking_data = create_booking_data
         firstname = booking_data["firstname"]

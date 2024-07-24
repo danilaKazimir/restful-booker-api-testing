@@ -66,3 +66,13 @@ class Assertions:
         else:
             assert expected_obj_values == response_as_dict, \
                 f"Incorrect JSON object in response! Expected - {expected_obj_values}, but is {response_as_dict}"
+
+    @staticmethod
+    def assert_expected_object_exist_in_json(response: Response, expected_obj: dict):
+        try:
+            response_as_dict = response.json()
+        except json.JSONDecodeError:
+            assert False, f"Response is not in JSON format. Response format is {response.text}"
+
+        assert any(expected_obj.items() <= booking.items() for booking in response_as_dict), \
+            f"Expected object {expected_obj} not found in the response {response_as_dict}"

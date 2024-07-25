@@ -12,6 +12,7 @@ class TestDeleteBooking(BaseApi):
         {"Authorization": "Invalid auth value"}
     ]
 
+    @pytest.mark.delete_data_after_test
     def test_update_booking_using_cookie_value(self, create_booking_data, create_new_booking, get_auth_token):
         booking_data_for_update = create_booking_data
 
@@ -24,6 +25,7 @@ class TestDeleteBooking(BaseApi):
         Assertions.assert_code_status(response, 200)
         Assertions.assert_json_obj_values(response, booking_data_for_update)
 
+    @pytest.mark.delete_data_after_test
     def test_update_booking_using_authorization_header(self, create_booking_data, create_new_booking):
         booking_data_for_update = create_booking_data
 

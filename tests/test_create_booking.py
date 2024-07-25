@@ -14,14 +14,17 @@ class TestCreateBooking(BaseApi):
         "checkout"
     ]
 
+    @pytest.mark.delete_data_after_test
     def test_create_new_booking(self, create_new_booking, create_booking_data):
         create_new_booking(create_booking_data)
 
+    @pytest.mark.delete_data_after_test
     def test_create_new_booking_without_additional_needs_info(self, create_new_booking, create_booking_data):
         booking_data = create_booking_data
         booking_data['additionalneeds'] = ""
         create_new_booking(booking_data)
 
+    @pytest.mark.delete_data_after_test
     def test_create_new_booking_without_additional_needs_field(self, create_new_booking, create_booking_data):
         booking_data = create_booking_data
         booking_data['additionalneeds'] = None

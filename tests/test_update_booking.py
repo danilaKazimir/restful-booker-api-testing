@@ -1,5 +1,4 @@
 import pytest
-
 from lib.base_api import BaseApi
 from lib.assertions import Assertions
 from constant import Constant

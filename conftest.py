@@ -53,7 +53,7 @@ def generate_field_value():
 
 
 @pytest.fixture
-def create_new_booking(request, get_auth_token):
+def create_new_booking(request):
     def _create_new_booking(data):
         response = base.post(f"{Constant.BOOKING_ROUTE}", data=data)
 
@@ -76,7 +76,7 @@ def create_new_booking(request, get_auth_token):
             if "delete_data_after_test" in request.node.keywords:
                 delete_response = base.delete(
                     f"{Constant.BOOKING_ROUTE}{booking_id}",
-                    headers={"Cookie": f"token={get_auth_token()}"}
+                    headers={"Authorization": Constant.AUTHORIZATION_VALUE}
                 )
                 Assertions.assert_code_status(delete_response, 201)
                 Assertions.assert_content(delete_response, "Created")
